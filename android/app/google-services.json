@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "863088518689",
+    "project_id": "albanur-ks2008",
+    "storage_bucket": "albanur-ks2008.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863088518689:android:8e852d1411df669c276560",
+        "android_client_info": {
+          "package_name": "com.example.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863088518689-b5mn8qcg6cv1ol69ugcdgjfo1oncf485.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_vsBTfEY0yDfnUQDTxUkyAOhVRZ-rMkw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863088518689-b5mn8qcg6cv1ol69ugcdgjfo1oncf485.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "863088518689-fe49f794tcp83t9vfabmvvv55qknudk5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
