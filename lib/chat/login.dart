@@ -1,5 +1,5 @@
-import 'package:chat/chat/home.dart';
 import 'package:chat/chat/register.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,22 +18,21 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login Page"),
-        centerTitle: true,
-      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildEmailField(),
-            const SizedBox(height: 20),
-            _buildPasswordField(),
-            const SizedBox(height: 20),
-            _buildLoginButton(),
-            const SizedBox(height: 20),
-            _buildRegisterButton(),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildEmailField(),
+              const SizedBox(height: 20),
+              _buildPasswordField(),
+              const SizedBox(height: 20),
+              _buildLoginButton(),
+              const SizedBox(height: 20),
+              _buildRegisterButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -42,9 +41,9 @@ class LoginPageState extends State<LoginPage> {
   Widget _buildEmailField() {
     return TextField(
       controller: _emailController,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: "Email",
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        labelText: tr("email_label"),
       ),
     );
   }
@@ -52,67 +51,50 @@ class LoginPageState extends State<LoginPage> {
   Widget _buildPasswordField() {
     return TextField(
       controller: _passwordController,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: "Password",
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        labelText: tr("password_label"),
       ),
       obscureText: true,
     );
   }
 
   Widget _buildLoginButton() {
-    return ElevatedButton(
+    return OutlinedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+                50.0), // Adjust the border radius as needed
+          ),
+        ),
+      ),
       onPressed: _handleLogin,
-      child: const Text("Login"),
+      child: const Icon(
+        Icons.login,
+        size: 24.0,
+        color: Colors.white,
+      ),
     );
   }
 
   Widget _buildRegisterButton() {
     return TextButton(
-      onPressed: () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const RegisterPage()),
-      ),
-      child: const Text("Register"),
+      onPressed: () => Navigator.pushNamed(context, '/register'),
+      child: Text("register".tr()),
     );
   }
 
   Future<void> _handleLogin() async {
-    final context =
-        this.context; // Capture the context before the asynchronous operation
-
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const Home(),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("No user found for that email."),
-          ),
-        );
-      } else if (e.code == 'wrong-password') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Wrong password provided for that user."),
-          ),
-        );
-      }
-    }
+    await _auth.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+    _handleLoginSuccess();
   }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  void _handleLoginSuccess() {
+    Navigator.pushNamed(context, '/home');
   }
 }
