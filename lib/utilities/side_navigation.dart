@@ -17,34 +17,28 @@ class SideNavigationBar extends StatefulWidget {
 class _SideNavigationBarState extends State<SideNavigationBar> {
   final User? _user = FirebaseAuth.instance.currentUser;
 
-  Future<Map<String, dynamic>> getUserData() async {
-    if (_user == null) {
-      throw Exception('User not logged in!');
-    }
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(_user!.uid)
-        .get();
-    return userDoc.data() as Map<String, dynamic>;
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: getUserData(),
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .get()
+          .then((snapshot) => snapshot.data() as Map<String, dynamic>),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Drawer(
-              child: Center(child: CircularProgressIndicator()));
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
-          return Drawer(child: Center(child: Text('Error: ${snapshot.error}')));
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        if (!snapshot.hasData || !snapshot.data!.containsKey('username')) {
+          return const Center(child: Text('User data not found.'));
         }
 
         final userData = snapshot.data!;
-        final profileImageUrl = userData['profileImage'] ?? '';
-        final userName = userData['username'] ?? '';
 
         return Drawer(
           width: 70,
@@ -54,19 +48,33 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                 child: Column(
                   children: [
                     CircleAvatar(
-                      radius: 35,
-                      backgroundImage: NetworkImage(profileImageUrl),
+                      radius: 50,
+                      backgroundImage: userData['profileImage'] != null
+                          ? NetworkImage(userData['profileImage'])
+                          : null,
+                      child: userData['profileImage'] == null
+                          ? const Icon(Icons.person, size: 30)
+                          : null,
                     ),
                     const SizedBox(height: 10),
                   ],
                 ),
               ),
               ListTile(
-                title: const Icon(Icons.home),
+                title: const Icon(Icons.chat_bubble_outline),
                 onTap: () {
                   Navigator.pushNamed(
                     context,
-                    '/home',
+                    '/chatrooms',
+                  );
+                },
+              ),
+              ListTile(
+                title: const Icon(Icons.chat_sharp),
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/privatemessages',
                   );
                 },
               ),

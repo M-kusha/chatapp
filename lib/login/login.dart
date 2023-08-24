@@ -1,4 +1,3 @@
-import 'package:chat/chat/register.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -95,6 +94,6 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void _handleLoginSuccess() {
-    Navigator.pushNamed(context, '/home');
+    Navigator.pushNamed(context, '/chatrooms');
   }
 }

@@ -1,5 +1,5 @@
-import 'package:chat/chat/login.dart';
-import 'package:chat/chat/routes.dart';
+import 'package:chat/login/login.dart';
+import 'package:chat/utilities/routes.dart';
 import 'package:chat/firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
