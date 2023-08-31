@@ -40,7 +40,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: AppRoutes.routes(),
-      home: const LoginPage(),
+      home: const LoginPage(
+        message: '',
+      ),
       debugShowCheckedModeBanner: false,
     );
   }

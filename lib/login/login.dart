@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final String message;
+  const LoginPage({Key? key, required this.message}) : super(key: key);
 
   @override
   LoginPageState createState() => LoginPageState();
@@ -90,6 +91,7 @@ class LoginPageState extends State<LoginPage> {
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
+
     _handleLoginSuccess();
   }
 

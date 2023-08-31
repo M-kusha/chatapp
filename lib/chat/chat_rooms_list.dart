@@ -1,12 +1,10 @@
-// chat_rooms_list.dart
-
 import 'package:chat/chat/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatRoomsList extends StatefulWidget {
-  const ChatRoomsList({super.key});
+  const ChatRoomsList({Key? key}) : super(key: key);
 
   @override
   ChatRoomsListState createState() => ChatRoomsListState();
@@ -26,7 +24,7 @@ class ChatRoomsListState extends State<ChatRoomsList> {
         stream: _firestore.collection('chatrooms').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
 
           final rooms = snapshot.data!.docs;
@@ -36,18 +34,26 @@ class ChatRoomsListState extends State<ChatRoomsList> {
             itemBuilder: (context, index) {
               final roomDoc = rooms[index];
               final roomId = roomDoc.id;
+              final roomName = roomDoc.get('chatroom');
+              final usersOnline = roomDoc.get('users_online');
 
-              return ListTile(
-                title: Text(roomId),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ChatRoom(roomId: roomId, userId: userId),
-                    ),
-                  );
-                },
+              return Card(
+                elevation: 4,
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: ListTile(
+                  title: Text(roomName),
+                  subtitle: Text('$usersOnline users online'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ChatRoom(roomId: roomId, userId: userId),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );

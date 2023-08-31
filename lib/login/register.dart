@@ -41,44 +41,38 @@ class RegisterPageState extends State<RegisterPage> {
 
   Future<void> _registerUser() async {
     if (_passwordController.text == _confirmPasswordController.text) {
-      try {
-        final UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-        final User user = userCredential.user!;
-        final String uid = user.uid;
+      final User user = userCredential.user!;
+      final String uid = user.uid;
 
-        // Store additional user details in Firestore
-        final userDocument =
-            FirebaseFirestore.instance.collection('users').doc(uid);
+      // Store additional user details in Firestore
+      final userDocument =
+          FirebaseFirestore.instance.collection('users').doc(uid);
 
-        await userDocument.set({
-          'username': _usernameController.text,
-          'phoneNumber': _phoneNumberController.text,
-          'birthdate': _birthdateController.text,
-          'gender': _selectedGender,
-          'createdAt': FieldValue.serverTimestamp(),
-        });
+      await userDocument.set({
+        'username': _usernameController.text,
+        'phoneNumber': _phoneNumberController.text,
+        'birthdate': _birthdateController.text,
+        'gender': _selectedGender,
+        'createdAt': FieldValue.serverTimestamp(),
+        'role': 'user',
+      });
 
-        // Upload profile picture to Firebase Storage
-        if (_profileImage != null) {
-          final storageRef =
-              FirebaseStorage.instance.ref().child('profile_images').child(uid);
-          final uploadTask = storageRef.putFile(_profileImage!);
-          final snapshot = await uploadTask.whenComplete(() => null);
-          final imageUrl = await snapshot.ref.getDownloadURL();
+      if (_profileImage != null) {
+        final storageRef =
+            FirebaseStorage.instance.ref().child('profile_images').child(uid);
+        final uploadTask = storageRef.putFile(_profileImage!);
+        final snapshot = await uploadTask.whenComplete(() => null);
+        final imageUrl = await snapshot.ref.getDownloadURL();
 
-          await userDocument.update({'profileImage': imageUrl});
-        }
-        _handleSuccess();
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        await userDocument.update({'profileImage': imageUrl});
       }
+      _handleSuccess();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Passwords do not match!')),

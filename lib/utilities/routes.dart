@@ -16,7 +16,9 @@ class AppRoutes {
       '/chatrooms': (context) => const ChatRoomsList(),
       '/profile': (context) => const ProfilePage(),
       '/settings': (context) => const SettingsPage(),
-      '/login': (context) => const LoginPage(),
+      '/login': (context) => const LoginPage(
+            message: '',
+          ),
       '/register': (context) => const RegisterPage(),
     };
   }
