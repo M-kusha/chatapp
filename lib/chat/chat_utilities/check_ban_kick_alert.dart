@@ -31,7 +31,6 @@ Future<KickStatus> checkUserKicked(String userId) async {
     );
   } catch (error) {
     // Handle the error, e.g., log it or return a default value
-    print('Error checking user kicked status: $error');
     return KickStatus(isKicked: false, kickExpiration: DateTime.now());
   }
 }
