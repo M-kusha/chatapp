@@ -60,7 +60,7 @@ class ChatRoomState extends State<ChatRoom> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Handle loading state
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
             // Handle error
             return Center(child: Text('Error: ${snapshot.error}'));
