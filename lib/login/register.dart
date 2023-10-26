@@ -3,8 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -16,21 +16,24 @@ class RegisterPage extends StatefulWidget {
 
 class RegisterPageState extends State<RegisterPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _usernameController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
-  final _birthdateController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _birthdateController = TextEditingController();
 
   File? _profileImage;
-  String _selectedGender = '';
   DateTime _selectedDate = DateTime.now();
-  CountryCode _selectedCountry = CountryCode.fromCountryCode('US');
+  bool _showTermsWarning = false;
+  bool _acceptTerms = false;
+  bool _showFieldsWarning = false;
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedImage =
+        await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
       setState(() {
@@ -40,6 +43,25 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _registerUser() async {
+    if (_areFieldsEmpty()) {
+      setState(() {
+        _showFieldsWarning = true;
+      });
+      return;
+    }
+    setState(() {
+      _showFieldsWarning = false;
+    });
+    if (!_acceptTerms) {
+      setState(() {
+        _showTermsWarning = true;
+      });
+      return;
+    }
+    setState(() {
+      _showTermsWarning = false;
+    });
+
     if (_passwordController.text == _confirmPasswordController.text) {
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -58,7 +80,6 @@ class RegisterPageState extends State<RegisterPage> {
         'username': _usernameController.text,
         'phoneNumber': _phoneNumberController.text,
         'birthdate': _birthdateController.text,
-        'gender': _selectedGender,
         'createdAt': FieldValue.serverTimestamp(),
         'role': 'user',
       });
@@ -72,12 +93,22 @@ class RegisterPageState extends State<RegisterPage> {
 
         await userDocument.update({'profileImage': imageUrl});
       }
+
       _handleSuccess();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match!')),
-      );
-    }
+    } else {}
+  }
+
+  bool _areFieldsEmpty() {
+    List<TextEditingController> controllers = [
+      _emailController,
+      _passwordController,
+      _confirmPasswordController,
+      _usernameController,
+      _phoneNumberController,
+      _birthdateController,
+    ];
+
+    return controllers.any((controller) => controller.text.isEmpty);
   }
 
   Future<void> _selectBirthdate() async {
@@ -98,189 +129,8 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   void _handleSuccess() {
-    Navigator.of(context).pop(); // Change this to your success screen
-  }
-
-  String _formatPhoneNumber(String number) {
-    // Remove all non-digit characters from the entered value
-    final cleanValue = number.replaceAll(RegExp(r'\D'), '');
-
-    if (cleanValue.isEmpty) {
-      return '';
-    }
-
-    final countryCode = _selectedCountry.dialCode;
-    final areaCode = cleanValue.substring(0, 2);
-    final phoneNumber = cleanValue.substring(2);
-
-    final formattedPhoneNumber = '+$countryCode $areaCode $phoneNumber';
-
-    return formattedPhoneNumber;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.grey,
-                    backgroundImage: _profileImage != null
-                        ? FileImage(_profileImage!)
-                        : null,
-                    child: _profileImage == null
-                        ? const Icon(Icons.add_a_photo,
-                            size: 40, color: Colors.white)
-                        : null,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: TextField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Email',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: TextField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Password',
-                    ),
-                    obscureText: true,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: TextField(
-                    controller: _confirmPasswordController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Confirm Password',
-                    ),
-                    obscureText: true,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: TextField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Username',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedGender.isNotEmpty ? _selectedGender : null,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedGender = newValue!;
-                      });
-                    },
-                    items: ['Male', 'Female', 'Other']
-                        .map<DropdownMenuItem<String>>(
-                          (String value) => DropdownMenuItem<String>(
-                            key: Key(value),
-                            value: value,
-                            child: Text(value),
-                          ),
-                        )
-                        .toList(),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Gender',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  style: const TextStyle(fontSize: 13),
-                  controller: _phoneNumberController,
-                  keyboardType: TextInputType.phone,
-                  onChanged: (value) {
-                    setState(() {
-                      _phoneNumberController.text =
-                          _formatPhoneNumber(value.trim());
-                    });
-                  },
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    prefixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _phoneNumberController.text = '';
-                        });
-                      },
-                      child: CountryCodePicker(
-                        initialSelection: 'US',
-                        hideMainText: true,
-                        textStyle: const TextStyle(fontSize: 13),
-                        showFlag: true,
-                        showDropDownButton: false,
-                        showOnlyCountryWhenClosed: true,
-                        alignLeft: false,
-                        showCountryOnly: true,
-                        onChanged: (CountryCode countryCode) {
-                          setState(() {
-                            _selectedCountry = countryCode;
-                            _phoneNumberController.text =
-                                _formatPhoneNumber(_phoneNumberController.text);
-                          });
-                        },
-                      ),
-                    ),
-                    hintText: 'Enter phone number',
-                  ),
-                ),
-                const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: _selectBirthdate,
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      controller: _birthdateController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Birthdate',
-                        suffixIcon: Icon(Icons.calendar_today),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _registerUser,
-                  child: const Text('Register'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    Navigator.of(context)
+        .pop(); // Change this to navigate to your success screen
   }
 
   @override
@@ -291,7 +141,210 @@ class RegisterPageState extends State<RegisterPage> {
     _usernameController.dispose();
     _phoneNumberController.dispose();
     _birthdateController.dispose();
-
     super.dispose();
+  }
+
+  Widget _profileImageSection() {
+    return GestureDetector(
+      onTap: _pickImage,
+      child: CircleAvatar(
+        radius: 50,
+        backgroundColor: Colors.grey[300],
+        backgroundImage:
+            _profileImage != null ? FileImage(_profileImage!) : null,
+        child: _profileImage == null
+            ? const Icon(Icons.add_a_photo, size: 40, color: Colors.white)
+            : null,
+      ),
+    );
+  }
+
+  Widget _formFieldSection() {
+    return Column(
+      children: [
+        _buildTextField(
+            _emailController, 'Email', false, TextInputType.emailAddress),
+        _buildTextField(
+            _usernameController, 'Username', false, TextInputType.text),
+        _buildTextField(_passwordController, 'Password', true,
+            TextInputType.visiblePassword),
+        _buildTextField(_confirmPasswordController, 'Confirm Password', true,
+            TextInputType.visiblePassword),
+        _buildPhoneField(),
+        _buildDateField('Birthdate', _birthdateController),
+        _pleaseFillAllTheFields(),
+      ],
+    );
+  }
+
+  Widget _registerButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(50),
+        backgroundColor: Colors.blue,
+      ),
+      onPressed: _registerUser,
+      child: const Text('Register'),
+    );
+  }
+
+  Widget _alreadyHaveAnAccount() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text('Already have an account?'),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Login'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAcceptTerms() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Checkbox(
+          value: _acceptTerms,
+          onChanged: (value) {
+            setState(() {
+              _acceptTerms = value!;
+              _showTermsWarning = false;
+            });
+          },
+        ),
+        const Text('I accept the '),
+        TextButton(
+          onPressed: () {
+            // Navigate to terms and conditions page
+          },
+          child: Text(
+            'Terms and Conditions',
+            style: TextStyle(
+              color: _showTermsWarning ? Colors.red : null,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _pleaseFillAllTheFields() {
+    return Visibility(
+      visible: _showFieldsWarning,
+      child: const Text(
+        'Please fill all the fields',
+        style: TextStyle(color: Colors.red, fontSize: 12),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label,
+      bool isObscure, TextInputType keyboardType) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isObscure,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhoneField() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextField(
+        controller: _phoneNumberController,
+        keyboardType: TextInputType.phone,
+        decoration: InputDecoration(
+          labelText: 'Phone Number',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: CountryCodePicker(
+              initialSelection: 'US',
+              showFlag: false,
+              padding: const EdgeInsets.all(8),
+              onChanged: (CountryCode countryCode) {},
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateField(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: GestureDetector(
+        onTap: _selectBirthdate,
+        child: AbsorbPointer(
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: label,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              suffixIcon: const Icon(Icons.calendar_today),
+              filled: true,
+              fillColor: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[100], // Light grey background
+      appBar: AppBar(
+        title: const Text('Register', style: TextStyle(color: Colors.black)),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                _profileImageSection(),
+                const SizedBox(height: 20),
+                _formFieldSection(),
+                const SizedBox(height: 20),
+                _registerButton(),
+                const SizedBox(height: 10),
+                Center(child: _buildAcceptTerms()),
+                _alreadyHaveAnAccount(),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
