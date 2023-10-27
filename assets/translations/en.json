@@ -1,8 +1,34 @@
-{
+{  
+
+    "Login Page": "Login Page",
+
+    "app_title": "Chat Rooms",
     "login_title": "Login",
     "email_label": "Email",
     "password_label": "Password",
-    "login_button": "Login",
-    "register_button": "Register"
+    "login_button": "Authenticate",
+    "register_button": "Register",
+    "forgot_password": "Forgot password?",
+    "dont_have_account": "Don't have an account?",
+    "or_login_with": "Or login with",
+    "create_new_account": "Register one now",
+    "remember_me": "Remember me",
+    "google_login": "Google Login",
+    "facebook_login": "Facebook Login",
+
+    "Register Page": "Register Page",
+
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "phone_number": "Phone Number",
+    "birthdate": "Birthdate",
+    "already_have_account": "Already have an account?",
+    "i_agree_to_the": "I agree to the",
+    "terms_and_conditions": "Terms and Conditions",
+    "register": "Register"
+
+
   }
   
