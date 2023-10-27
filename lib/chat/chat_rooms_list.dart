@@ -1,5 +1,6 @@
 import 'package:chat/chat/chat_room.dart';
 import 'package:chat/chat/chat_utilities/check_ban_kick_alert.dart';
+import 'package:chat/utilities/top_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,7 +47,7 @@ class ChatRoomsListState extends State<ChatRoomsList> {
     final userId = _auth.currentUser!.uid;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Chat Rooms')),
+      bottomNavigationBar: const TopNavigation(),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore.collection('chatrooms').snapshots(),
         builder: (context, snapshot) {
