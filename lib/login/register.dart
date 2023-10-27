@@ -163,15 +163,15 @@ class RegisterPageState extends State<RegisterPage> {
     return Column(
       children: [
         _buildTextField(
-            _emailController, 'Email', false, TextInputType.emailAddress),
+            _emailController, 'email'.tr(), false, TextInputType.emailAddress),
         _buildTextField(
-            _usernameController, 'Username', false, TextInputType.text),
-        _buildTextField(_passwordController, 'Password', true,
+            _usernameController, 'username'.tr(), false, TextInputType.text),
+        _buildTextField(_passwordController, 'password'.tr(), true,
             TextInputType.visiblePassword),
-        _buildTextField(_confirmPasswordController, 'Confirm Password', true,
-            TextInputType.visiblePassword),
+        _buildTextField(_confirmPasswordController, 'confirm_password'.tr(),
+            true, TextInputType.visiblePassword),
         _buildPhoneField(),
-        _buildDateField('Birthdate', _birthdateController),
+        _buildDateField('birthdate'.tr(), _birthdateController),
         _pleaseFillAllTheFields(),
       ],
     );
@@ -184,7 +184,9 @@ class RegisterPageState extends State<RegisterPage> {
         backgroundColor: Colors.blue,
       ),
       onPressed: _registerUser,
-      child: const Text('Register'),
+      child: Text(
+        'register'.tr(),
+      ),
     );
   }
 
@@ -192,12 +194,14 @@ class RegisterPageState extends State<RegisterPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('Already have an account?'),
+        Text('already_have_account'.tr()),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Login'),
+          child: Text(
+            'login_title'.tr(),
+          ),
         ),
       ],
     );
@@ -216,13 +220,13 @@ class RegisterPageState extends State<RegisterPage> {
             });
           },
         ),
-        const Text('I accept the '),
+        Text('i_agree_to_the'.tr()),
         TextButton(
           onPressed: () {
             // Navigate to terms and conditions page
           },
           child: Text(
-            'Terms and Conditions',
+            'terms_and_conditions'.tr(),
             style: TextStyle(
               color: _showTermsWarning ? Colors.red : null,
             ),
@@ -270,7 +274,7 @@ class RegisterPageState extends State<RegisterPage> {
         controller: _phoneNumberController,
         keyboardType: TextInputType.phone,
         decoration: InputDecoration(
-          labelText: 'Phone Number',
+          labelText: '${'phone_number'.tr()} *',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -280,7 +284,9 @@ class RegisterPageState extends State<RegisterPage> {
               initialSelection: 'US',
               showFlag: false,
               padding: const EdgeInsets.all(8),
-              onChanged: (CountryCode countryCode) {},
+              onChanged: (CountryCode countryCode) {
+                // save countryCode to a variable
+              },
             ),
           ),
           filled: true,
@@ -317,13 +323,6 @@ class RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100], // Light grey background
-      appBar: AppBar(
-        title: const Text('Register', style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -331,6 +330,7 @@ class RegisterPageState extends State<RegisterPage> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
+                const SizedBox(height: 30),
                 _profileImageSection(),
                 const SizedBox(height: 20),
                 _formFieldSection(),
