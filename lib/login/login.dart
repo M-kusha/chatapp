@@ -67,7 +67,7 @@ class LoginPageState extends State<LoginPage> {
                         size: 35, color: Colors.blue),
                     const SizedBox(width: 10),
                     Text(
-                      'Chat Rooms',
+                      'app_title'.tr(),
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -108,7 +108,8 @@ class LoginPageState extends State<LoginPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Login', style: Theme.of(context).textTheme.titleLarge),
+          Text('login_title'.tr(),
+              style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 20),
           _buildEmailField(),
           const SizedBox(height: 20),
@@ -127,7 +128,7 @@ class LoginPageState extends State<LoginPage> {
                       });
                     },
                   ),
-                  const Text('Remember me').tr(),
+                  const Text('remember_me').tr(),
                 ],
               ),
               Align(
@@ -135,7 +136,7 @@ class LoginPageState extends State<LoginPage> {
                 child: TextButton(
                   onPressed: () =>
                       Navigator.pushNamed(context, '/forgot-password'),
-                  child: const Text("Forgot Password?").tr(),
+                  child: const Text("forgot_password").tr(),
                 ),
               ),
             ],
@@ -198,7 +199,7 @@ class LoginPageState extends State<LoginPage> {
   Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: _handleLogin,
-      child: const Text('Authenticate').tr(),
+      child: const Text('login_button').tr(),
     );
   }
 
@@ -207,7 +208,7 @@ class LoginPageState extends State<LoginPage> {
       children: [
         const Divider(),
         const SizedBox(height: 20),
-        const Text('Or use').tr(),
+        const Text('or_login_with').tr(),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -218,7 +219,7 @@ class LoginPageState extends State<LoginPage> {
                 // Handle Google login
               },
             ),
-            const Text('Google').tr(),
+            const Text('google_login').tr(),
             const SizedBox(width: 20),
             IconButton(
               icon: const Icon(Icons.facebook),
@@ -226,7 +227,7 @@ class LoginPageState extends State<LoginPage> {
                 // Handle Facebook login
               },
             ),
-            const Text('Facebook').tr(),
+            const Text('facebook_login').tr(),
           ],
         ),
       ],
@@ -237,10 +238,10 @@ class LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account?").tr(),
+        const Text("dont_have_account").tr(),
         TextButton(
           onPressed: () => Navigator.pushNamed(context, '/register'),
-          child: const Text('Create now').tr(),
+          child: const Text('create_new_account').tr(),
         ),
       ],
     );
