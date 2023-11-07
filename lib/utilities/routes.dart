@@ -1,5 +1,8 @@
 import 'package:chat/chat/chat_room.dart';
 import 'package:chat/chat/chat_rooms_list.dart';
+import 'package:chat/login/change_password.dart';
+import 'package:chat/login/reset_password.dart';
+import 'package:chat/login/reset_verification.dart';
 import 'package:chat/profile/profile.dart';
 import 'package:chat/login/register.dart';
 import 'package:chat/utilities/settings.dart';
@@ -20,6 +23,10 @@ class AppRoutes {
             message: '',
           ),
       '/register': (context) => const RegisterPage(),
+      '/reset_password': (context) => const ResetPasswordPage(),
+      '/ResetPasswordVerificationPage': (context) =>
+          const ResetPasswordVerificationPage(),
+      '/ChangePasswordPage': (context) => const ChangePasswordPage(),
     };
   }
 }
