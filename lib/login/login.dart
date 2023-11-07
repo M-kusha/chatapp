@@ -64,14 +64,14 @@ class LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.chat_bubble_outline,
-                        size: 35, color: Colors.blue),
+                        size: 35, color: Colors.blueGrey),
                     const SizedBox(width: 10),
                     Text(
                       'app_title'.tr(),
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue[800],
+                        color: Colors.blueGrey[700],
                         fontFamily: 'CustomFont', // Use your custom font
                       ),
                     ),
@@ -121,6 +121,8 @@ class LoginPageState extends State<LoginPage> {
               Row(
                 children: [
                   Checkbox(
+                    checkColor: Colors.white,
+                    activeColor: Colors.blueGrey,
                     value: _rememberMe,
                     onChanged: (value) {
                       setState(() {
@@ -135,7 +137,7 @@ class LoginPageState extends State<LoginPage> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () =>
-                      Navigator.pushNamed(context, '/forgot-password'),
+                      Navigator.pushNamed(context, '/reset_password'),
                   child: const Text("forgot_password").tr(),
                 ),
               ),
@@ -198,6 +200,15 @@ class LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.blueGrey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+      ),
       onPressed: _handleLogin,
       child: const Text('login_button').tr(),
     );
