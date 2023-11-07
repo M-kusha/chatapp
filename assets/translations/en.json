@@ -2,6 +2,8 @@
 
     "Login Page": "Login Page",
 
+    "ok": "OK",
+
     "app_title": "Chat Rooms",
     "login_title": "Login",
     "email_label": "Email",
@@ -27,7 +29,33 @@
     "already_have_account": "Already have an account?",
     "i_agree_to_the": "I agree to the",
     "terms_and_conditions": "Terms and Conditions",
-    "register": "Register"
+    "register": "Register",
+
+    "Reset Password Page": "Reset Password Page",
+
+    "reset_password": "Reset Password",
+    "enter_email": "Enter your email",
+    "send_reset_code": "Send Reset Code",
+    "user_not_found": "No user found for that email.",
+    "check_email_again": "Please check your email and try again.",
+    "unexpected_error": "An unexpected error occurred. Please try again later.",
+
+    "Reset Verification Page": "Reset Verification Page",
+
+    "reset_verification": "Reset Code Verification",
+    "enter_reset_code": "Enter the 6-digit code sent to your email address",
+    "verify_reset_code": "Verify Reset Code",
+
+    "Set New Password Page": "Set New Password Page",
+
+    "set_new_password": "Set New Password",
+    "enter_new_password": "Enter your new password",
+    "confirm_new_password": "Confirm your new password",
+    "new_password": "New Password",
+    "please_enter_new_password": "Please enter your new password",
+    "passwords_dont_match": "Passwords do not match. Please try again.",
+    "password_must_be_at_least_6_characters": "Password must be at least 6 characters long.",
+    "change_password": "Change Password"
 
 
   }
