@@ -20,7 +20,7 @@ class MessageList extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('chatrooms')
+          .collection('chat_rooms')
           .doc(roomId)
           .collection('messages')
           .orderBy('timestamp', descending: true)
