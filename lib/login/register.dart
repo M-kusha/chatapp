@@ -82,6 +82,8 @@ class RegisterPageState extends State<RegisterPage> {
         'birthdate': _birthdateController.text,
         'createdAt': FieldValue.serverTimestamp(),
         'role': 'user',
+        'kickExpiration': null,
+        'banExpiration': null,
       });
 
       if (_profileImage != null) {
