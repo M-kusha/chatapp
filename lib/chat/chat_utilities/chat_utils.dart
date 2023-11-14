@@ -106,7 +106,7 @@ Future<bool> checkModerator(String userId) async {
 
 Future<void> deleteMessage(String roomId, String messageId) async {
   await FirebaseFirestore.instance
-      .collection('chatrooms')
+      .collection('chat_rooms')
       .doc(roomId)
       .collection('messages')
       .doc(messageId)
@@ -151,7 +151,7 @@ Future<void> sendMessage(
     final profileImage = userDoc.get('profileImage');
 
     await FirebaseFirestore.instance
-        .collection('chatrooms')
+        .collection('chat_rooms')
         .doc(roomId)
         .collection('messages')
         .add({
